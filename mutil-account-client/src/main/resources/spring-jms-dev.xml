@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<!-- 配置JMS连接工厂 -->
+	<bean id="activeMqConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+		<property name="useAsyncSend" value="true" />
+	</bean>
+	<!-- 连接工厂的定义 -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<constructor-arg ref="activeMqConnectionFactory" />
+		<property name="sessionCacheSize" value="100" /><!-- 缓存的消息数 -->
+	</bean>
+
+	<!-- receive 消息的目的地（一个队列） -->
+	<bean id="receiveQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<!-- 设置消息队列的名字 -->
+		<constructor-arg index="0" value="receiveQueue" />
+	</bean>
+
+	<bean id="poiMessageListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="receiveQueue" />
+		<property name="messageListener" ref="messageListener" />
+		<property name="concurrentConsumers" value="10" />
+	</bean>
+	<bean id="tokenCache" class="cn.nahan.cd.weixin.client.impl.DefaultTokenCache">
+		<property name="tokenInter" ref="tokenInter" />
+		<!-- ms  -->
+		<property name="expiresTime" value="7100000" />
+	</bean>
+	<bean id="messageListener"
+		class="cn.nahan.cd.weixin.client.listener.WeiXinMessageListener">
+		<property name="messageEventInter" ref="messageEventInter" />
+		<property name="weiXinContent" ref="weiXinContent" />
+	</bean>
+	
+	<bean id="weiXinContent"
+		class="cn.nahan.cd.weixin.sesion.DefaultWeiXinContent" init-method="init">
+	</bean>
+	
+
+	<!-- use for test -->
+	<bean id="messageEventInter" class="cn.nahan.cd.weixin.client.DefaultMessageEvent">
+		<property name="tokenCache" ref="tokenCache" />
+	</bean>
+    <!-- 根据微信公众号获取token，token会缓存起来 ,超时后自动获取新的token-->
+	<bean id="tokenInter" class="cn.nahan.cd.weixin.client.DefaultToken">
+		<property name="tokenRequest" ref="tokenRequest" />
+	</bean>
+	<bean id="tokenRequest" class="cn.nahan.cd.weixin.bean.TokenRequest">
+		<property name="weiXinName" value="gh_1feb9c07be30" />
+		<property name="appId" value="wxe7c9da5a714b134b" />
+		<property name="appSecret" value="dc66c40a77070c2eb97309e7a1179e48" />
+	</bean>
+</beans>
