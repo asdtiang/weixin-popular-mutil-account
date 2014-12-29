@@ -7,7 +7,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class MessageEventInterTest {
 	public static void main(String args[]){
 		ApplicationContext context = new ClassPathXmlApplicationContext(
-				"spring-jms-dev.xml");
-		
+				"spring-jms-dev.xml");	
 	}
 }

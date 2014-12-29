@@ -9,7 +9,7 @@
 
 	<!-- 配置JMS连接工厂 -->
 	<bean id="activeMqConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
-		<property name="brokerURL" value="tcp://localhost:61616" />
+		<property name="brokerURL" value="tcp://42.62.104.73:61616" />
 		<property name="useAsyncSend" value="true" />
 	</bean>
 	<!-- 连接工厂的定义 -->
@@ -32,31 +32,31 @@
 		<property name="messageListener" ref="messageListener" />
 		<property name="concurrentConsumers" value="10" />
 	</bean>
-	<bean id="tokenCache" class="cn.nahan.cd.weixin.client.impl.DefaultTokenCache">
+	<bean id="tokenCache" class="weixin.popular.mutil.account.client.impl.DefaultTokenCache">
 		<property name="tokenInter" ref="tokenInter" />
 		<!-- ms  -->
 		<property name="expiresTime" value="7100000" />
 	</bean>
 	<bean id="messageListener"
-		class="cn.nahan.cd.weixin.client.listener.WeiXinMessageListener">
+		class="weixin.popular.mutil.account.client.listener.WeiXinMessageListener">
 		<property name="messageEventInter" ref="messageEventInter" />
 		<property name="weiXinContent" ref="weiXinContent" />
 	</bean>
 	
 	<bean id="weiXinContent"
-		class="cn.nahan.cd.weixin.sesion.DefaultWeiXinContent" init-method="init">
+		class="weixin.popular.mutil.account.client.sesion.DefaultWeiXinContent" init-method="init">
 	</bean>
 	
 
 	<!-- use for test -->
-	<bean id="messageEventInter" class="cn.nahan.cd.weixin.client.DefaultMessageEvent">
+	<bean id="messageEventInter" class="weixin.popular.mutil.account.client.DefaultMessageEvent">
 		<property name="tokenCache" ref="tokenCache" />
 	</bean>
     <!-- 根据微信公众号获取token，token会缓存起来 ,超时后自动获取新的token-->
-	<bean id="tokenInter" class="cn.nahan.cd.weixin.client.DefaultToken">
+	<bean id="tokenInter" class="weixin.popular.mutil.account.client.DefaultToken">
 		<property name="tokenRequest" ref="tokenRequest" />
 	</bean>
-	<bean id="tokenRequest" class="cn.nahan.cd.weixin.bean.TokenRequest">
+	<bean id="tokenRequest" class="weixin.popular.mutil.account.client.TokenRequest">
 		<property name="weiXinName" value="gh_1feb9c07be30" />
 		<property name="appId" value="wxe7c9da5a714b134b" />
 		<property name="appSecret" value="dc66c40a77070c2eb97309e7a1179e48" />

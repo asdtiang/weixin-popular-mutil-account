@@ -28,16 +28,6 @@ public class DefaultMessageEvent implements MessageEventInter{
 		log.info("send msg to "+eventMessage.getFromUserName());
 		BaseResult result= MessageAPI.messageCustomSend(token, returnMsg);
 		log.info("send result-->"+"token:"+token+result.getErrcode()+result.getErrmsg());
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		tokenCache.removeTokenCache(eventMessage.getToUserName());
-		token = tokenCache.getToken(eventMessage.getToUserName());
-		result= MessageAPI.messageCustomSend(token, returnMsg);
-		log.info("send result-->"+"token:"+token+result.getErrcode()+result.getErrmsg());
 		
 	}
 	public TokenCache getTokenCache() {
