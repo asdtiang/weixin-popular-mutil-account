@@ -5,7 +5,7 @@
 基于 https://github.com/liyiorg/weixin-popular 项目更改
 
 
-![image](https://github.com/asdtiang/weixin-popular-mutil-account/tree/master/mutil-account-server)
+![image](https://github.com/asdtiang/weixin-popular-mutil-account/tree/master/mutil-account-server/image/w-jms.png)
 用户发送的消息首先到weiXin服务器，weiXin服务器发送消息到我们的指定地址，由w-server接收，w-server接收到消息后发送消息到jms队列并返回空字符串给weiXin
     服务器，其它的webApp异步监听jms队列。
 发送消息
