@@ -5,6 +5,18 @@
 基于 https://github.com/liyiorg/weixin-popular 项目更改
 
 
+![image](https://github.com/asdtiang/weixin-popular-mutil-account/tree/master/mutil-account-server)
+用户发送的消息首先到weiXin服务器，weiXin服务器发送消息到我们的指定地址，由w-server接收，w-server接收到消息后发送消息到jms队列并返回空字符串给weiXin
+    服务器，其它的webApp异步监听jms队列。
+发送消息
+当消息被webApp接收到后，处理业务逻辑，完成后同步发送消息给用户。
+组件说明：
+W-server：负责接收微信消息，并且异步发送消息到jms队列，注意暴露地址需要80端口（微信api要求）。
+Jms:负责消息异步处理和缓存。
+webApp：具体的业务组件，可以使用同一个w-server配置不同的queue，实现多个业务组件。
+
+通过以上架构后,本地只对接jms服务器后,即可实现本地开发,不用去配置网络,直接可以本地调试,同时也实现多帐户.
+
 简介:
 ==============
 weixin-jms 包括微信公众平台基础API,提供便捷的API调用接口,消息接收后通过jms(activemq)异步处理,方便在多个微信公众号和单个公众号之间切换。
